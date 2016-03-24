@@ -1,6 +1,6 @@
 AbstractClientStore = require('express-brute/lib/AbstractClientStore')
 moment = require('moment')
-#_ = require('underscore')
+_ = require('underscore')
 #Waterline = require('waterline')
 
 bruteStore = module.exports = () ->
