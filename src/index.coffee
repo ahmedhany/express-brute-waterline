@@ -121,7 +121,7 @@ bruteStore.prototype.get = (key, callback) ->
 bruteStore.prototype.reset = (key, callback) ->
   self = this
   _id = this.options.prefix+key
-  Bruteforce = Waterline.collections.bruteforce
+  #Bruteforce = Waterline.collections.bruteforce
   Bruteforce.destroy
     _id: _id
   .exec (err, doc) ->
