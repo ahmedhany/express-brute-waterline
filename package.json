@@ -32,7 +32,6 @@
   "dependencies": {
     "express-brute": "^0.5.2",
     "underscore": "^1.7.0",
-    "moment": "^2.9.0",
-    "waterline": "~0.10.9"
+    "moment": "^2.9.0"
   }
 }
