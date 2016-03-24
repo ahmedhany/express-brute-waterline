@@ -11,6 +11,8 @@ bruteStore = module.exports = () ->
   }
   this.options = _.extend({}, bruteStore.defaults, options)
 
+  return this
+
 ###
 bruteStore = module.exports = (callback) ->
   AbstractClientStore.apply(this, arguments)
