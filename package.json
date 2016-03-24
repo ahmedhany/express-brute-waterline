@@ -1,7 +1,7 @@
 {
-  "name": "express-brute-sequelize",
+  "name": "express-brute-waterline",
   "version": "0.0.5",
-  "description": "Sequelize store for express-brute",
+  "description": "Waterline store for express-brute",
   "main": "index.js",
   "scripts": {
     "test": "mocha"
@@ -14,14 +14,14 @@
     "rate",
     "limit",
     "security",
-    "sequelize",
+    "waterline",
     "store"
   ],
-  "author": "Sanjay Hadiya",
+  "author": "Ahmed Hany",
   "license": "BSD",
   "repository": {
     "type": "git",
-    "url": "https://github.com/maddy2get/express-brute-sequelize.git"
+    "url": "https://github.com/ahmedhany/express-brute-waterline.git"
   },
   "devDependencies": {
     "coffee-script": "^1.9.0",
@@ -33,6 +33,6 @@
     "express-brute": "^0.5.2",
     "underscore": "^1.7.0",
     "moment": "^2.9.0",
-    "sequelize": "~1.7.0"
+    "waterline": "~0.10.9"
   }
 }

@@ -1,41 +1,54 @@
 expect = require('expect.js')
-Sequelize = require('sequelize')
-
+Waterline = require('waterline')
+sailsMemoryAdapter = require('sails-memory')
+###
 sequelize = new Sequelize('sequelizeBrute-test', 'root', 'new-password', {
   host: "127.0.0.1"
   dialect: "mysql"
   logging: false
 })
+###
+waterline = new Waterline()
 
-SequelizeStore = require('../')
+WaterlineStore = require('../')
 
-describe 'MongoStore', ->
-  sequelizeStore = null
+describe 'MemoryStore', ->
+  waterlineStore = null
   beforeEach (done) ->
     this.timeout(5000)
-    new SequelizeStore(sequelize, 'brute-force', {}, (store) ->
-      sequelizeStore = store
+    new WaterlineStore(waterline, 'bruteforce', {
+      logging:
+        true
+      adapters:
+        'memory': sailsMemoryAdapter
+
+      connections:
+        default:
+          adapter: 'memory'
+    }, (store) ->
+      waterlineStore = store
       done()
     )
 
   it 'should be able to set a value', (done) ->
-    sequelizeStore.set('foo', {count:123}, 1000, (err) ->
+    waterlineStore.set('foo', {count:123}, 1000, (err) ->
       return done(err) if err
-      sequelizeStore._table.find
+      Bruteforce = Waterline.collections.bruteforce
+      Bruteforce.find
         where:
           _id: 'foo'
-      .success (doc) ->
+      .exec (err, doc) ->
+        return done(err) if err
         expect(doc.count).to.be(123)
         expect(doc.expires).to.be.a(Date)
         done()
-      .error (err) ->
-        done(err)
+
     )
 
   it 'should be able to get a value', (done) ->
-    sequelizeStore.set('foo', {count:123}, 1000, (err) ->
+    waterlineStore.set('foo', {count:123}, 1000, (err) ->
       return done(err) if err
-      sequelizeStore.get 'foo', (err, doc) ->
+      waterlineStore.get 'foo', (err, doc) ->
         return done(err) if err
         expect(doc).have.property('count')
         expect(doc.count).to.be(123)
@@ -43,10 +56,10 @@ describe 'MongoStore', ->
     )
 
   it 'should return undefined if expired', (done) ->
-    sequelizeStore.set('foo', {count:123}, 0, (err) ->
+    waterlineStore.set('foo', {count:123}, 0, (err) ->
       return done(err) if err
       setTimeout ->
-          sequelizeStore.get 'foo', (err, doc) ->
+          waterlineStore.get 'foo', (err, doc) ->
             expect(doc).to.be(undefined)
             done()
       , 200
@@ -55,35 +68,35 @@ describe 'MongoStore', ->
 
 
   it 'should delete the doc if expired', (done) ->
-    sequelizeStore.set('foo', {count:123}, 0, (err) ->
+    waterlineStore.set('foo', {count:123}, 0, (err) ->
       return done(err) if err
       setTimeout ->
-          sequelizeStore.get 'foo', (err, doc) ->
+          waterlineStore.get 'foo', (err, doc) ->
             setTimeout ->
-                sequelizeStore._table.find
+                Bruteforce = Waterline.collections.bruteforce
+                Bruteforce.find
                   where:
                     _id: 'foo'
-                .success (doc) ->
+                .exec (err, doc) ->
+                  return done(err) if err
                   expect(doc).to.be(null)
                   done()
-                .error (err) ->
-                  done(err)
             , 100
             done()
       , 100
     )
 
   it 'should be able to reset', (done) ->
-    sequelizeStore.set('foo', {count:123}, 1000, (err) ->
+    waterlineStore.set('foo', {count:123}, 1000, (err) ->
       return done(err) if err
-      sequelizeStore.reset 'foo', (err, doc) ->
+      waterlineStore.reset 'foo', (err, doc) ->
         return done(err) if err
-        sequelizeStore._table.find
+        Bruteforce = Waterline.collections.bruteforce
+        Bruteforce.find
           where:
             _id: 'foo'
-        .success (doc) ->
+        .exec (err, doc) ->
+          return done(err) if err
           expect(doc).to.be(null)
           done()
-        .error (err) ->
-          done(err)
     )
